@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>List of questions</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+    <a class="navbar-brand" href="#">Proiect WEB DEV</a>
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="/exam">Parcurge un chestionar</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-light bg-dark" href="/questions">Intrebari</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/questions/new">Adaugare intrebare</span></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<br>
+	<a th:href = "@{/questions/new}" class="btn btn-primary">Adauga o noua intrebare</a>
+	<h3 th:text = "'In total sunt un numar de : '+${questions.size()} +' intrebari'"></h3>
+	<div class="row row-cols-1 row-cols-md-6 g-6" style="padding-top:10px;">
+  		<div class="col" th:each = "question: ${questions}">
+			<div class="card">
+			  <div class="card-body">
+			  	<center>
+			  	<img th:if="${question.imageString != null  && question.imageString != ''}" class="card-img-top" style="width: 10rem; height:10rem;"th:src="|${question.imageString}|"></center>
+			  	<br>
+			  	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4
+        //8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />
+			    <h9 class="card-title" th:text = "${question.title}"></h9>
+			  </div>
+			  <ul class="list-group list-group-flush">
+			  	<th:block th:each="answer : ${question.answers}">
+			    	<th:block th:switch="${answer.rightAnswer}">
+    					<li th:case="false" class="list-group-item bg-secondary text-white" th:text = "${answer.answerText}"></li>
+    					<li th:case="true" class="list-group-item bg-success text-white" th:text = "${answer.answerText}"></li>
+    				</th:block>
+			    </th:block>
+			  </ul>
+			  <div class="card-body">
+			    <a th:href ="@{/questions/{id}(id=${question.id})}" class="card-link">Sterge intrebarea</a>
+			  </div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

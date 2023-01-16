@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Adauga o noua intrebare</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+    <a class="navbar-brand" href="#">Proiect WEB DEV</a>
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="/exam">Parcurge un chestionar</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/questions">Intrebari</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link text-light bg-dark" href="/questions/new">Adaugare intrebare</span></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<br>
+	<div class = "container align-items-center justify-content-center">
+		<div class = "row">
+			<div class ="col-lg-7 col-md-7 col-sm-7 container justify-content-center card">
+				<h1 class = "text-center"> Adauga o noua intrebare</h1>
+				<div class = "card-body">
+					<form onsubmit="beforeSubmit()" name="formNewQuestion" th:action="@{/questions}" th:object = "${newQuestion}" method="POST" enctype="multipart/form-data">
+						<div class="input-group mb-3">
+						  <input
+							type = "text"
+							name = "title"
+							th:field = "*{title}"
+							class = "form-control"
+							aria-describedby="basic-addon1"
+							placeholder="Introdu titlul intrebarii" 
+							/>
+							<div class="input-group-prepend">
+						    <button class="btn btn-outline-secondary" type="button" onclick="createAnswer()">Adauga raspuns</button>
+						  </div>
+						</div>
+						<div id="localInsertAnswer"></div>			
+						<div class="input-group mb-3">
+						  <div class="custom-file">
+						    <input type="file" class="custom-file-input" id="" name="inputImage">
+						  </div>
+						</div>
+						<div class = "box-footer">
+							<button type="submit" class = "btn btn-primary">
+								Creeaza intrebarea
+							</button>
+						</div>
+						<input name="jsonValueAnswers" id="jsonValueAnswers" type ="hidden" style="display: none;"/>
+					</form>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script>
+let answersInPage = 0;
+function createAnswer(){
+	console.log(answersInPage);
+	document.getElementById("localInsertAnswer").insertAdjacentHTML("afterbegin",
+			`<div class="input-group">
+			  <input id="textAnswer`+answersInPage+`" type="text" class="form-control" placeholder="Introdu raspunsul intrebarii"  aria-label="Text input with dropdown button">
+			  <div class="input-group-append">
+				<select class="btn btn-outline-secondary " id="rightAnswerValue`+answersInPage+`">
+				  <option value="0" selected>Raspuns gresit</option>
+				  <option value="1" >Raspuns corect</option>
+				</select>
+			  </div>
+			</div>`);
+	answersInPage++;
+}
+
+function beforeSubmit(){
+    let jsonString  = '{ "answers" : [';
+    for (let i = 0; i < answersInPage; i++) {
+   	  jsonString += '{ "text":"'+document.getElementById("textAnswer"+i).value+'" , "answerCheck":"'+document.getElementById("rightAnswerValue"+i).value+'" }';
+   	  if(i != answersInPage-1){
+   		  jsonString += ',';
+   	  }
+   	}
+    jsonString += ']}';
+	document.getElementById("jsonValueAnswers").value = jsonString;
+}
+</script>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+    <a class="navbar-brand" href="#">Proiect WEB DEV</a>
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link  text-light bg-dark" href="/exam">Parcurge un chestionar</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/questions">Intrebari</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/questions/new">Adaugare intrebare</span></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<br>
+
+<div class="container mt-5">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-10 col-lg-10">
+                <div class="border">
+                    <div class="question bg-white p-3 border-bottom">
+                        <div class="d-flex flex-row justify-content-between align-items-center mcq">
+                            <h4>Chestionar Auto</h4> <span><i th:text = "${correctAnswers}" class="text-success"></i> <i class="text-success">corecte</i> <i th:text = "${wrongAnswers}" class="text-danger"></i> <i class="text-danger">gresite</i> (<b th:text = "${question.index}"></b> din 26)</span></div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+						  	<img th:if="${question.entityQuestion.imageString != null  && question.entityQuestion.imageString != ''}" class="card-img-top" style="width:20rem;"th:src="'../'+${question.entityQuestion.imageString}"></center>
+					</div>
+					
+					<form onsubmit="beforeSubmit()" th:action="@{/checkAsnwer}" th:object = "${question}" method="POST">
+                    <div class="question bg-white p-3 border-bottom">
+                        <div class="d-flex flex-row align-items-center question-title">
+                            <h3 class="text-danger">&#x2022; </h3>
+                            <h5 class="mt-1 ml-2" th:text = "${question.entityQuestion.title}" ></h5>
+                        </div>
+                        <th:block th:each="answer : ${question.entityQuestion.answers}">
+	                        <div class="ans ml-2">
+								<label class="radio"> 
+									<input class="form-check-input" type="checkbox" th:value = "${answer.id}" name="questionAnswer" th:id="${answer.id}"> <span><h9 th:text = "${answer.answerText}"></h9></span>
+								</label>   
+							</div>
+						</th:block> 
+						</div>
+					<input name="jsonValueAnswers" id="jsonValueAnswers" type ="hidden" style="display: none;"/>
+                    <input th:value = "${question.entityQuestion.id}" name="idCurrentQuestion" id="idCurrentQuestion" type ="hidden" style="display: none;"/>
+                    <div class="d-flex flex-row justify-content-between align-items-center p-3 bg-white">
+                    
+                    <button type="submit" class="btn btn-primary border-success align-items-center btn-success">Trimite raspunsul<i class="fa fa-angle-right ml-2"></i></button></div>
+                	</form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+function beforeSubmit(){
+	let elements = document.getElementsByName("questionAnswer");
+	let jsonString  = '{ "answers" : [';
+    for (let i = 0; i < elements.length; i++) {
+    	element = elements[i];
+    	console.log(element.checked);
+ 		jsonString += '{ "id":"'+element.id+'" , "checked":"'+element.checked+'" }';
+		if(i != elements.length-1){
+			jsonString += ',';
+		} 
+   	}
+    jsonString += ']}';
+	document.getElementById("jsonValueAnswers").value = jsonString;
+}
+</script>
+</html>
